@@ -80,7 +80,7 @@ app.use(
 app.use(express.json())
 
 app.post('/api/attendance/', (req, res) => {
-    console.log('HI')
+  
     const code = req.body.code
 
     let sql = `SELECT * FROM normal_attendance WHERE CardCode=${code}`
@@ -104,5 +104,21 @@ app.post('/api/timetable/', (req, res) => {//id пары и предмета н�
     })
 })
 
+app.post('/api/insert-attendance', (req, res) => {//обработчик для записи в базу
+   
+    const id = req.body.id
+
+    let allCards = req.body.cards
+    let cards = allCards.split(',')
+
+    let sql = ``
+    cards.forEach((card) => {
+        sql = `INSERT INTO normal_attendance(CardCode, TimetableId, Presence) VALUES (${card.trim()}, ${id}, 1)`
+        console.log(sql)
+        connection.query(sql, (err, data) => {
+            console.log('SQL request has been executed')
+        })
+    })
+})
 
 app.listen(PORT)
